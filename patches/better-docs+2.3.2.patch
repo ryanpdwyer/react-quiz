@@ -1,0 +1,42 @@
+diff --git a/node_modules/better-docs/tmpl/param.tmpl b/node_modules/better-docs/tmpl/param.tmpl
+index 9097578..5145c29 100644
+--- a/node_modules/better-docs/tmpl/param.tmpl
++++ b/node_modules/better-docs/tmpl/param.tmpl
+@@ -16,22 +16,6 @@
+   <?js } ?>
+   </td>
+ 
+-  <?js if (params.hasAttributes) {?>
+-      <td class="attributes">
+-      <?js if (param.optional) { ?>
+-          &lt;optional><br>
+-      <?js } ?>
+-
+-      <?js if (param.nullable) { ?>
+-          &lt;nullable><br>
+-      <?js } ?>
+-
+-      <?js if (param.variable) { ?>
+-          &lt;repeatable><br>
+-      <?js } ?>
+-      </td>
+-  <?js } ?>
+-
+   <?js if (params.hasDefault) {?>
+       <td class="default">
+       <?js if (typeof param.defaultvalue !== 'undefined') { ?>
+diff --git a/node_modules/better-docs/tmpl/params.tmpl b/node_modules/better-docs/tmpl/params.tmpl
+index d75b924..310df91 100644
+--- a/node_modules/better-docs/tmpl/params.tmpl
++++ b/node_modules/better-docs/tmpl/params.tmpl
+@@ -84,10 +84,6 @@
+ 
+             <th>Type</th>
+ 
+-            <?js if (params.hasAttributes) {?>
+-            <th>Attributes</th>
+-            <?js } ?>
+-
+             <?js if (params.hasDefault) {?>
+             <th>Default</th>
+             <?js } ?>
