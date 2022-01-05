@@ -4,7 +4,7 @@
 
 Welcome to simple React Quiz components!
 
-The code is found in the `js` folder. The [github repository](https://github.com/ryanpdwyer/react-quiz/tree/main/js) is all set up to allow you to write your own quiz questions and include them on any static webpage!
+The code is found in the `js` folder. The [github repository](https://github.com/ryanpdwyer/react-quiz/) is all set up to allow you to write your own quiz questions and include them on any static webpage!
 
 ## Examples
 
