@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run eleventy && npm run babel",
+    "build": "npm run eleventy && npm run babel && npm run jsdoc",
     "eleventy": "eleventy",
     "babel": "babel -d _site/js js",
+    "jsdoc": "npx jsdoc -c jsdoc.json js/QuestionLim.js -t ./node_modules/better-docs -d _site/out",
     "postinstall": "npx patch-package" 
   },
   "keywords": [],
