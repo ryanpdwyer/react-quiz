@@ -197,6 +197,159 @@ export function QuestionLimF({correctFeedback="Correct!",
 }
 
 
+function check(event) {
+	let val = parseFloat(inputRef.current.value); // A little clunky...
+	setValue(val);
+	if (!almostEq(val, props.answer, relErr, absErr)) {
+		setGuesses(guesses + 1);
+	}
+
+}
+
+export function QControlled({correctFeedback="Correct!",
+					   incorrectFeedbackDigits=2,
+					   value,
+					   answer,
+					   correct,
+					   handleChange,
+					   guesses,
+					   handleGuess,
+					   maxGuesses=3,
+					   relErr=0.015,
+					   absErr=1e-12,
+					   name,
+					   ...props}) {
+
+	const disabled = (guesses >= maxGuesses) || correct ;
+
+	function handleKeyPress(event) {
+		if (event.key === 'Enter') {
+			handleGuess(event);
+		}
+	}
+
+	let feedback = props.feedback || [];
+
+	// Convert to an array if given just a single feedback element.
+	if (!Array.isArray(feedback)) {
+		feedback = [feedback];
+	}
+
+	let condIncorrectFeedback = feedback.map((x, i) => {
+		x.value = value; // Set the value in the feedback paragraph to the current input value
+		x.key = i; // Should be okay since I am never re-ordering the feedback
+		return FeedbackP(x);
+	});
+
+	let jsx = (<div className="question">
+				{props.children}
+				<p>
+					<input type="number" name={name+'-input'} value={value} disabled={disabled}
+						onChange={handleChange}
+						onKeyPress={handleKeyPress} />
+					&nbsp;
+					{props.inputLabel}
+					<button className="check" onClick={handleGuess}
+							disabled={disabled}>
+						Check
+					</button>
+				</p>
+					<DispP display={correct}>
+						{correctFeedback}
+					</DispP>
+					{condIncorrectFeedback}
+					<IncorrectFeedback guesses={guesses} maxGuesses={maxGuesses}
+						digits={incorrectFeedbackDigits} {...props}
+						display={!correct} />
+
+			</div>);
+	return props.hidden ? null : jsx;
+}
+
+/**
+ * A numerical answer question with a limited number of guesses (default 3) built-in and feedback.
+ * 
+ * @param {Object} props 
+ * @param {number} props.answer - The correct answer to the question
+ * @param {string} [props.correctFeedback='Correct!'] - The feedback given when the user answers correctly.
+ * @param {number} [props.incorrectFeedbackDigits=2] - The number of digits after the decimal point that are displayed.
+ * @param {number} [props.guesses=3] - The number of guesses the user gets before the correct answer is revealed.
+ * @param {number} [props.relErr=0.015] - The relative error tolerance; defaults to 1.5% to allow for rounding errors in user calculations.
+ * @param {number} [props.absErr=1e-12] - The absolute error tolerance (to account for small floating point errors).
+ * @param {bool} [props.hidden] - If true, hide the element.
+ * @param {Object[]} [props.condIncorrectFeedback] - A list of FeedbackP props objects used to generate feedback elements.
+ * @example
+ * (
+ * <QuestionLimF answer={42}/>
+ * What is the meaning of life?
+ * </QuestionLimF>
+ * )
+ *  
+*/
+export function QuestLimFC({correctFeedback="Correct!",
+					   incorrectFeedbackDigits=2,
+					   value,
+					   answer,
+					   handleChange,
+					   guesses,
+					   handleGuess,
+					   maxGuesses=3,
+					   relErr=0.015,
+					   absErr=1e-12,
+					   ...props}) {
+
+	const correct = almostEq(value, props.answer, relErr, absErr);
+
+	const disabled = (guesses >= maxGuesses) || correct ;
+
+
+
+	function handleKeyPress(event) {
+		if (event.key === 'Enter') {
+			check(event);
+		}
+	}
+
+	let feedback = props.feedback || [];
+
+	// Convert to an array if given just a single feedback element.
+	if (!Array.isArray(feedback)) {
+		feedback = [feedback];
+	}
+
+	let condIncorrectFeedback = feedback.map((x, i) => {
+		x.value = value; // Set the value in the feedback paragraph to the current input value
+		x.key = i; // Should be okay since I am never re-ordering the feedback
+		return FeedbackP(x);
+	});
+
+	let jsx = (<div className="question">
+				{props.children}
+				<p>
+					<input type="number" ref={inputRef} disabled={disabled}
+						onKeyPress={handleKeyPress} />
+					&nbsp;
+					{props.inputLabel}
+					<button className="check" onClick={check}
+							disabled={disabled}>
+						Check
+					</button>
+				</p>
+					<DispP display={correct}>
+						{correctFeedback}
+					</DispP>
+					{condIncorrectFeedback}
+					<IncorrectFeedback guesses={guesses} maxGuesses={maxGuesses}
+						digits={incorrectFeedbackDigits} {...props}
+						display={!correct} />
+
+			</div>);
+	return props.hidden ? null : jsx;
+}
+
+
+
+
 /**
  * This component represents a question with feedback; with no way to limit the
  * number of allowed attempts.
